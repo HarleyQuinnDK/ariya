@@ -18,7 +18,18 @@
     <title>Thajské masáže Uherské Hradiště</title>
 </head>
 <body>
-
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // MAGIC – příklad animace nebo efektu
+    const body = document.querySelector("body");
+    body.style.transition = "background 1s ease";
+    body.style.background = "#000";
+    setTimeout(() => {
+        body.style.background = "#fff";
+        alert("✨ Vítejte na stránce s magic efektem! ✨");
+    }, 1000);
+});
+</script>
     <div class="header-hp">
         <header>
             <div class="inner-wrapper clearfix">
