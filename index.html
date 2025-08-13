@@ -19,69 +19,56 @@
 </head>
 <body>
 <script>
-(function () {
-  if (window.__magicActive) return;          // pojistka proti vícenásobnému spuštění
+(function(){
+  if (window.__magicActive) return;
   window.__magicActive = true;
 
-  const css = `
-  #dkMagicOverlay{
-    position:fixed; inset:0; z-index:2147483647;
-    display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(80% 60% at 50% 40%, rgba(255,255,255,.15), rgba(0,0,0,.85) 60%), rgba(0,0,0,.85);
-    backdrop-filter:blur(2px);
-    opacity:1; transition:opacity .4s ease;
-  }
-  #dkMagicPortal{
-    position:relative; width:min(88vw,680px); height:min(60vh,420px); border-radius:24px;
-    background:conic-gradient(from 0deg at 50% 50%, #8cf, #a6f, #8cf);
-    filter:blur(.2px) saturate(1.2);
-    box-shadow:0 0 40px rgba(160,140,255,.5), inset 0 0 80px rgba(255,255,255,.2);
-    animation:spin 5s linear infinite;
-  }
-  #dkMagicText{
-    position:absolute; left:0; right:0; bottom:10%;
-    text-align:center; font:700 clamp(24px,6vw,48px)/1.1 system-ui, Segoe UI, Roboto, Arial;
-    color:#fff; text-shadow:0 4px 24px rgba(0,0,0,.6)
-  }
-  .spark{position:absolute; top:-10vh; width:8px; height:12px; opacity:.9; border-radius:6px; background:linear-gradient(#fff,#9cf); animation:fall linear forwards}
-  .conf{position:absolute; top:-6vh; width:10px; height:14px; opacity:.95; border-radius:2px; transform:rotate(15deg); animation:drop linear forwards}
+  const css=`#dkMagicOverlay{position:fixed;inset:0;background:radial-gradient(80% 60% at 50% 40%,rgba(255,255,255,.15),rgba(0,0,0,.85) 60%),#000;backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:2147483647}
+  #dkMagicPortal{position:relative;width:min(88vw,680px);height:min(60vh,420px);border-radius:24px;background:conic-gradient(from 0deg at 50% 50%,#8cf,#a6f,#8cf);filter:blur(.2px) saturate(1.2);box-shadow:0 0 40px rgba(160,140,255,.5),inset 0 0 80px rgba(255,255,255,.2);animation:spin 5s linear infinite}
+  #dkMagicText{position:absolute;inset:auto 0 10%;text-align:center;font:700 clamp(24px,6vw,48px)/1.1 system-ui,Segoe UI,Roboto,Arial;color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+  .spark{position:absolute;top:-10vh;width:8px;height:12px;opacity:.9;animation:fall linear forwards}
+  .conf{position:absolute;top:-6vh;width:10px;height:14px;opacity:.95;transform:rotate(15deg);animation:drop linear forwards}
   @keyframes spin{to{transform:rotate(1turn)}}
   @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
-  @keyframes drop{to{transform:translateY(108vh) rotate(720deg)}}
-  `;
-  const s = document.createElement('style'); s.textContent = css;
-  const o = document.createElement('div');  o.id = 'dkMagicOverlay';
-  const p = document.createElement('div');  p.id = 'dkMagicPortal';
-  const t = document.createElement('div');  t.id = 'dkMagicText'; t.textContent = 'Abrakadabra, Kubíku ✨';
+  @keyframes drop{to{transform:translateY(108vh) rotate(720deg)}}`;
 
-  o.appendChild(p); o.appendChild(t);
-  document.body.appendChild(s); document.body.appendChild(o);
+  const s=document.createElement('style');s.textContent=css;
+  const o=document.createElement('div');o.id='dkMagicOverlay';
+  const p=document.createElement('div');p.id='dkMagicPortal';
+  const t=document.createElement('div');t.id='dkMagicText';t.textContent='Abrakadabra, Kubíku ✨';
+  o.appendChild(p);o.appendChild(t);
+  document.body.appendChild(s);document.body.appendChild(o);
 
-  // konfety + jiskry
-  const rnd = n => Math.random() * n;
-  const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#b892ff'];
-  for (let i=0;i<36;i++){
-    const e = document.createElement('div'); e.className='spark';
-    e.style.left = rnd(100)+'vw';
-    e.style.animationDuration = (4+rnd(2))+'s';
-    e.style.animationDelay = rnd(1)+'s';
-    document.body.appendChild(e); setTimeout(()=>e.remove(),7000);
-  }
-  for (let i=0;i<60;i++){
-    const c = document.createElement('div'); c.className='conf';
-    c.style.left = rnd(100)+'vw'; c.style.background = colors[i%colors.length];
-    c.style.animationDuration = (3.5+rnd(2))+'s';
-    c.style.animationDelay = rnd(1)+'s';
-    document.body.appendChild(c); setTimeout(()=>c.remove(),7000);
+  const rnd=n=>Math.random()*n;
+
+  for(let i=0;i<36;i++){
+    const e=document.createElement('div');
+    e.className='spark';
+    e.style.left=(rnd(100))+'vw';
+    e.style.background='linear-gradient(#fff,#9cf)';
+    e.style.borderRadius='6px';
+    e.style.animationDuration=(4+rnd(2))+'s';
+    e.style.animationDelay=(rnd(1))+'s';
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),7000);
   }
 
-  // pojistky na zavření
-  const cleanup = () => { o.style.opacity='0'; setTimeout(()=>{ o.remove(); s.remove(); }, 450); };
-  setTimeout(cleanup, 6000);                 // auto po 6s
-  o.addEventListener('click', cleanup);       // klik anywhere
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') cleanup(); }, { once:true });
+  const colors=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#b892ff'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='conf';
+    c.style.left=(rnd(100))+'vw';
+    c.style.background=colors[i%colors.length];
+    c.style.animationDuration=(3.5+rnd(2))+'s';
+    c.style.animationDelay=(rnd(1))+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),7000);
+  }
+
+  const cleanup=()=>{o.remove();s.remove();};
+  setTimeout(cleanup,6000);
+  o.addEventListener('click',cleanup);
 })();
-</script>
 </script>
     <div class="header-hp">
         <header>
